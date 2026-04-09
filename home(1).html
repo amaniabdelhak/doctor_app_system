@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedBook - Book Your Doctor Appointment Easily</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">MedBook</a>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="#" class="login-btn" onclick="openModal('login'); return false;">Login</a>
+                <a href="#" class="signup-btn" onclick="openModal('signup'); return false;">Signup</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+
+        <section id="home" class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Book Your Doctor Appointment Easily</h1>
+                    <p>Find doctors, book clinic or home visits, and manage your health in one place.</p>
+                    <div class="search-container">
+                        <input type="text" placeholder="Search by specialty (e.g. dentist)">
+                        <!-- LINK: Search → doctorslist.html -->
+                        <button class="search-btn" onclick="window.location.href='doctorslist.html'">Search</button>
+                    </div>
+                    <!-- LINK: Book Now → doctorslist.html -->
+                    <button class="book-now-btn" onclick="window.location.href='doctorslist.html'">Book Now</button>
+                </div>
+                <div class="hero-image">
+                    <svg viewBox="0 0 500 500" class="doctor-illustration">
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#b3d1ff;stop-opacity:0.3" />
+                                <stop offset="100%" style="stop-color:#d0e1ff;stop-opacity:0.3" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="250" cy="250" r="230" fill="url(#grad1)" />
+                        <path d="M 400 150 L 420 150 M 410 140 L 410 160" stroke="#ccc" stroke-width="2" />
+                        <path d="M 100 250 A 20 20 0 0 1 140 250" fill="none" stroke="#ccc" stroke-width="3" />
+                        <path d="M 450 480 Q 400 400 350 480" fill="#80a9ff" opacity="0.6"/>
+                        <path d="M 400 480 Q 350 420 300 480" fill="#80a9ff" opacity="0.6"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <div class="section-container">
+                <h2>About Us</h2>
+                <div class="about-grid">
+                    <div class="about-card">
+                        <h3>Who we are</h3>
+                        <p>We are a dedicated team of professionals providing top-tier medical coordination and support, connecting patients with the best healthcare providers worldwide.</p>
+                    </div>
+                    <div class="about-card">
+                        <h3>Our Vision</h3>
+                        <p>To redefine the medical tourism experience by offering seamless, high-quality, and personalized journeys for patients seeking treatment.</p>
+                    </div>
+                    <div class="about-card">
+                        <h3>Our Team</h3>
+                        <p>Meet our compassionate coordinators, medical experts, and logistics partners who make your health journey possible.</p>
+                    </div>
+                </div>
+                <div class="about-links-section">
+                    <a href="#">Terms & Conditions</a>
+                    <a href="#">FAQs</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="section-container">
+                <h2>Contact</h2>
+                <div class="contact-flex">
+                    <div class="contact-details">
+                        <p><strong>Phone:</strong> +923041234567</p>
+                        <p><strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f09d9594929f9f9bb0949f93849f82de939f9d">[email&#160;protected]</a></p>
+                        <p><strong>Location:</strong> Holland, Amsterdam</p>
+                    </div>
+                    <div class="contact-map-placeholder">
+                        <img src="location.png" class="imagelocation">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-container">
+                <div class="footer-col brand-col">
+                    <p class="brand-text">Favorite Doctor</p>
+                    <p class="brand-subtext">The ultimate destination for all of your medical needs</p>
+                    <div class="social-icons">
+                        <span class="icon-circle">f</span>
+                        <span class="icon-circle">t</span>
+                        <span class="icon-circle">i</span>
+                    </div>
+                </div>
+                <div class="footer-col links-col">
+                    <h4>Explore</h4>
+                    <a href="#home">Home</a>
+                    <a href="#">Surgery</a>
+                    <a href="#">OPD</a>
+                    <a href="#">Speciality</a>
+                    <a href="#">Consultation</a>
+                </div>
+                <div class="footer-col links-col">
+                    <h4>About Us</h4>
+                    <a href="#">Who we are</a>
+                    <a href="#">Our Vision</a>
+                    <a href="#">Our Team</a>
+                    <a href="#">Terms & Conditions</a>
+                    <a href="#">FAQs</a>
+                </div>
+                <div class="footer-col links-col contact-col">
+                    <h4>Contact</h4>
+                    <p>+923041234567</p>
+                    <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1e787f68716c776a7b5e7a717d6a716c307d7173">[email&#160;protected]</a></p>
+                    <p>Glassplace, Near Cool Avenue, Boston</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright 2024 Favorite Doctor, All Rights Reserved</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- MODAL OVERLAY -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
+        <div class="modal-box" id="modalBox">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+
+            <div class="tab-btns">
+                <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+            </div>
+
+            <!-- LOGIN -->
+            <div id="loginForm">
+                <h2>Welcome back!</h2>
+                <p class="sub">Login to your account</p>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button class="submit-btn">Login</button>
+                <p class="switch-text">New here? <a onclick="switchTab('signup')">Create an account</a></p>
+            </div>
+
+            <!-- SIGNUP -->
+            <div id="signupForm" style="display:none;">
+                <h2>Start your journey!</h2>
+                <p class="sub">Create your account</p>
+                <div class="name-row">
+                    <input type="text" placeholder="First Name">
+                    <input type="text" placeholder="Last Name">
+                </div>
+                <input type="email" placeholder="Email">
+                <input type="tel" placeholder="Phone Number">
+                <!-- LINK: Role select — يحدد وين يروح بعد Sign Up -->
+                <select id="roleSelect" onchange="this.classList.add('filled')">
+                    <option value="" disabled selected>Select Role</option>
+                    <option value="patient">Patient</option>
+                    <option value="doctor">Doctor</option>
+                    <!--<option value="nurse">Nurse</option>-->
+                </select>
+                <input type="password" placeholder="Password">
+                <input type="password" placeholder="Confirm Password">
+                <button class="submit-btn" onclick="handleSignup()">Sign Up</button>
+                <p class="switch-text">Already have an account? <a onclick="switchTab('login')">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="home.js"></script>
+    <script>
+    // LINK: Sign Up → يروح حسب الـ Role
+    function handleSignup() {
+        const role = document.getElementById('roleSelect').value;
+        if (!role) { alert('Please select your role.'); return; }
+        if (role === 'doctor') {
+            window.location.href = 'doctor_profile.html';
+        } else {
+            // patient 
+            window.location.href = 'patient_profile.html';
+        }
+    }
+    </script>
+</body>
+</html>

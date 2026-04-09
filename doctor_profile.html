@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Doctor Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #F2F9FF;
+      min-height: 100vh;
+    }
+
+    nav {
+      background: #fff;
+      border-bottom: 0.5px solid #d0e8ff;
+      padding: 0 40px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-logo { font-size: 20px; font-weight: 700; color: #0086FF; letter-spacing: -0.5px; }
+    .nav-logo span { color: #234A6B; }
+    .nav-back {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 14px; color: #234A6B;
+      background: none; border: none; cursor: pointer;
+      font-family: inherit; transition: color 0.2s;
+    }
+    .nav-back:hover { color: #0086FF; }
+
+    .page {
+      max-width: 860px;
+      margin: 48px auto;
+      padding: 0 24px 60px;
+    }
+
+    .hero {
+      background: #0086FF;
+      border-radius: 20px 20px 0 0;
+      padding: 40px 48px 72px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -44px; left: 0; right: 0;
+      height: 88px;
+      background: #F2F9FF;
+      border-radius: 50% 50% 0 0 / 64px 64px 0 0;
+    }
+
+    .hero-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+    .icon-btn {
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,0.22);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border: none; transition: background 0.2s;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,0.35); }
+
+    .hero-body {
+      display: flex;
+      align-items: flex-end;
+      gap: 36px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-text h1 {
+      font-size: 34px; font-weight: 700;
+      color: #fff; line-height: 1.15;
+    }
+    .hero-text .credentials {
+      margin-top: 8px; font-size: 14px;
+      color: #cce8ff; line-height: 1.8;
+    }
+
+    .doctor-photo {
+      margin-left: auto;
+      width: 150px; height: 175px;
+      background: #ECF6FF;
+      border-radius: 18px;
+      border: 3px solid rgba(255,255,255,0.5);
+      flex-shrink: 0; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .doctor-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-placeholder {
+      color: #0086FF; font-size: 12px; opacity: 0.5;
+      text-align: center; padding: 10px;
+    }
+
+    .card {
+      background: #fff;
+      border: 0.5px solid #d0e8ff;
+      padding: 28px 40px;
+      position: relative;
+      top: -24px;
+    }
+    .card-bottom {
+      border-radius: 0 0 20px 20px;
+      top: -24px;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .btn-details {
+      flex: 1;
+      background: #ECF6FF; border: none; border-radius: 12px;
+      padding: 12px 18px; font-size: 14px; font-weight: 600;
+      color: #0086FF; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: inherit; transition: background 0.2s;
+    }
+    .btn-details:hover { background: #d6eeff; }
+
+    .btn-reviews {
+      background: #ECF6FF; border: none; border-radius: 12px;
+      padding: 12px 20px; cursor: pointer;
+      display: flex; align-items: center; gap: 7px;
+      font-family: inherit; transition: background 0.2s;
+    }
+    .btn-reviews:hover { background: #d6eeff; }
+    .btn-reviews span { font-size: 14px; font-weight: 600; color: #0086FF; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .stat-box {
+      background: #F2F9FF; border-radius: 14px;
+      padding: 16px 12px; text-align: center;
+    }
+    .stat-value { font-size: 22px; font-weight: 700; color: #0086FF; }
+    .stat-label { margin-top: 4px; font-size: 12px; color: #234A6B; opacity: 0.75; }
+
+    .section-title {
+      font-size: 15px; font-weight: 700;
+      color: #234A6B; margin-bottom: 12px;
+    }
+    .about-text {
+      font-size: 14px; color: #1E1E1E;
+      line-height: 1.75; opacity: 0.85;
+      margin-bottom: 28px;
+    }
+
+    .cert-list { display: flex; flex-direction: column; gap: 10px; }
+    .cert-item { display: flex; align-items: center; gap: 10px; }
+    .cert-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%; background: #0086FF; flex-shrink: 0;
+    }
+    .cert-item p { font-size: 14px; color: #1E1E1E; }
+
+    .book-wrapper { margin-top: 32px; }
+    .btn-book {
+      display: block; width: 100%;
+      background: #234A6B; color: #fff;
+      border: none; border-radius: 14px;
+      padding: 16px; font-size: 16px; font-weight: 700;
+      cursor: pointer; text-align: center; text-decoration: none;
+      font-family: inherit; transition: background 0.2s, transform 0.1s;
+    }
+    .btn-book:hover  { background: #1a3a56; }
+    .btn-book:active { transform: scale(0.98); }
+
+    .visit-badges { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+    .badge {
+      background: #ECF6FF; border-radius: 20px;
+      padding: 6px 14px; font-size: 13px;
+      font-weight: 600; color: #0086FF;
+      border: 0.5px solid #d0e8ff;
+    }
+    .badge.inactive { background: #f5f5f5; color: #aaa; border-color: #eee; }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 200;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal-sheet {
+      background: #fff; width: 100%; max-width: 520px;
+      border-radius: 20px; padding: 28px 32px;
+      max-height: 85vh; overflow-y: auto;
+      animation: fadeUp 0.25s ease;
+    }
+    @keyframes fadeUp {
+      from { transform: translateY(16px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 20px;
+    }
+    .modal-header h2 { font-size: 17px; font-weight: 700; color: #234A6B; }
+    .btn-close {
+      width: 30px; height: 30px; background: #F2F9FF;
+      border: none; border-radius: 50%; font-size: 15px;
+      color: #234A6B; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .btn-close:hover { background: #d6eeff; }
+
+    #comments-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+
+    .comment-card {
+      background: #F2F9FF; border-radius: 12px;
+      padding: 14px 16px; border: 0.5px solid #d0e8ff;
+    }
+    .comment-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .comment-name  { font-size: 14px; font-weight: 600; color: #1E1E1E; }
+    .comment-stars { font-size: 12px; color: #0086FF; margin-top: 2px; }
+    .comment-text  { font-size: 13px; color: #1E1E1E; opacity: 0.85; line-height: 1.6; }
+
+    .review-form { border-top: 0.5px solid #d0e8ff; padding-top: 18px; }
+    .form-label  { font-size: 14px; font-weight: 600; color: #234A6B; margin-bottom: 10px; }
+
+    .stars-row { display: flex; gap: 5px; margin-bottom: 12px; }
+    .star {
+      font-size: 28px; cursor: pointer;
+      color: #d0e8ff; transition: color 0.15s, transform 0.1s;
+      user-select: none;
+    }
+    .star:hover  { transform: scale(1.15); }
+    .star.active { color: #0086FF; }
+
+    .review-textarea {
+      width: 100%; border: 0.5px solid #d0e8ff;
+      border-radius: 12px; padding: 11px 13px;
+      font-size: 13px; font-family: inherit;
+      resize: none; height: 80px;
+      background: #F2F9FF; color: #1E1E1E;
+      outline: none; transition: border-color 0.2s;
+    }
+    .review-textarea:focus { border-color: #0086FF; }
+
+    .btn-submit {
+      width: 100%; margin-top: 10px;
+      background: #0086FF; color: #fff;
+      border: none; border-radius: 12px;
+      padding: 13px; font-size: 14px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-submit:hover  { background: #006fd6; }
+    .btn-submit:active { transform: scale(0.98); }
+
+    /* Home visit badge colors */
+    .badge.clinic  { background: #e6f4ea; color: #2e7d32; border-color: #c8e6c9; }
+    .badge.home    { background: #fff3e0; color: #e65100; border-color: #ffe0b2; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">Med<span>Book</span></div>
+    <button class="nav-back" onclick="history.back()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+      Back to results
+    </button>
+  </nav>
+
+  <div class="page">
+
+    <div class="hero">
+      <div class="hero-topbar">
+        <button class="icon-btn" onclick="history.back()">
+          <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+        <button class="icon-btn">
+          <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="hero-body">
+        <div class="hero-text">
+
+          <h1 id="hero-name">Dr. ...</h1>
+          <p class="credentials" id="hero-credentials">Loading...</p>
+        </div>
+        <div class="doctor-photo">
+          <img id="doctor-img" src="" alt="Doctor Photo" style="display:none"/>
+          <p class="photo-placeholder" id="photo-placeholder">Doctor<br>Photo<br>Here</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-bottom">
+
+      <div class="action-row">
+        <button class="btn-details" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
+          <svg width="15" height="15" fill="none" stroke="#0086FF" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+          Details
+        </button>
+        <button class="btn-reviews" onclick="openModal()">
+          <svg width="17" height="17" fill="none" stroke="#0086FF" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Reviews</span>
+        </button>
+      </div>
+
+      <div class="stats">
+        <div class="stat-box">
+          <div class="stat-value" id="stat-exp">—</div>
+          <div class="stat-label">Years Exp.</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="stat-patients">—</div>
+          <div class="stat-label">Patients</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="stat-rating">—</div>
+          <div class="stat-label">Rating</div>
+        </div>
+      </div>
+
+      <!-- Visit types -->
+      <p class="section-title">Available For</p>
+      <div class="visit-badges" id="visit-badges"></div>
+
+      <p class="section-title" id="about">About</p>
+      <p class="about-text" id="about-text">Loading...</p>
+
+      <p class="section-title">Certifications</p>
+      <div class="cert-list" id="cert-list"></div>
+
+      <div class="book-wrapper">
+        <a class="btn-book" id="book-btn" href="#">Book Appointment</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h2>Patient Reviews</h2>
+        <button class="btn-close" onclick="closeModal()">✕</button>
+      </div>
+
+      <div id="comments-list"></div>
+
+      <div class="review-form">
+        <p class="form-label">Leave a Review</p>
+        <div class="stars-row" id="stars">
+          <span class="star" onclick="setRating(1)">★</span>
+          <span class="star" onclick="setRating(2)">★</span>
+          <span class="star" onclick="setRating(3)">★</span>
+          <span class="star" onclick="setRating(4)">★</span>
+          <span class="star" onclick="setRating(5)">★</span>
+        </div>
+        <textarea class="review-textarea" id="comment-input" placeholder="Write your review..."></textarea>
+        <button class="btn-submit" onclick="submitComment()">Submit Review</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    
+
+    const params = new URLSearchParams(window.location.search);
+
+    function get(key, fallback = '') {
+      return params.get(key) || fallback;
+    }
+
+    // اسم الدكتور
+    const fullName = get('name', 'Doctor Name');
+    const nameParts = fullName.split(' ');
+    // نقسم الاسم على سطرين إذا فيه أكثر من كلمة
+    if (nameParts.length >= 2) {
+      const mid = Math.ceil(nameParts.length / 2);
+      document.getElementById('hero-name').innerHTML =
+        'Dr. ' + nameParts.slice(0, mid).join(' ') + '<br>' + nameParts.slice(mid).join(' ');
+    } else {
+      document.getElementById('hero-name').textContent = 'Dr. ' + fullName;
+    }
+
+    // Credentials
+    const degree    = get('degree', 'MD');
+    const specialty = get('specialty', 'General Medicine');
+    document.getElementById('hero-credentials').innerHTML = degree + '<br>' + specialty;
+
+    // Stats
+    const exp      = get('exp', '—');
+    const patients = get('patients', '—');
+    const rating   = get('rating', '—');
+    document.getElementById('stat-exp').textContent      = exp + (exp !== '—' ? '+' : '');
+    document.getElementById('stat-patients').textContent = patients + (patients !== '—' ? '+' : '');
+    document.getElementById('stat-rating').textContent   = rating;
+
+    // صورة الدكتور ي URL
+    const photoUrl = get('photo', '');
+    if (photoUrl) {
+      const img = document.getElementById('doctor-img');
+      img.src = photoUrl;
+      img.style.display = 'block';
+      document.getElementById('photo-placeholder').style.display = 'none';
+    }
+
+    // Visit types: clinic و/أو home
+    const clinicAvail = get('clinic', 'true');
+    const homeAvail   = get('home', 'false');
+    const badgesEl    = document.getElementById('visit-badges');
+    if (clinicAvail === 'true') {
+      badgesEl.innerHTML += '<span class="badge clinic">Clinic Visit</span>';
+    }
+    if (homeAvail === 'true') {
+      badgesEl.innerHTML += '<span class="badge home">Home Visit</span>';
+    }
+    if (clinicAvail !== 'true' && homeAvail !== 'true') {
+      badgesEl.innerHTML = '<span class="badge inactive">Not specified</span>';
+    }
+
+    // About
+    const about = get('about', 'No description provided.');
+    document.getElementById('about-text').textContent = about;
+
+    
+    const certsRaw = get('certs', '');
+    const certList = document.getElementById('cert-list');
+    if (certsRaw) {
+      certsRaw.split('|').forEach(cert => {
+        const item = document.createElement('div');
+        item.className = 'cert-item';
+        item.innerHTML = `<div class="cert-dot"></div><p>${cert.trim()}</p>`;
+        certList.appendChild(item);
+      });
+    } else {
+      certList.innerHTML = '<p style="font-size:14px;color:#aaa;">No certifications listed.</p>';
+    }
+
+    const doctorId = get('id', '');
+    const bookBtn  = document.getElementById('book-btn');
+    if (doctorId) {
+      bookBtn.href = `booking.html?doctorId=${doctorId}`;
+    }
+
+    
+    function openModal()  { document.getElementById('modal').classList.add('open'); }
+    function closeModal() { document.getElementById('modal').classList.remove('open'); }
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('modal')) closeModal();
+    }
+
+    let selectedRating = 0;
+    function setRating(n) {
+      selectedRating = n;
+      document.querySelectorAll('.star').forEach((s, i) => {
+        s.classList.toggle('active', i < n);
+      });
+    }
+
+    function submitComment() {
+      const input = document.getElementById('comment-input');
+      const text  = input.value.trim();
+      if (!text || selectedRating === 0) {
+        alert('Please add a rating and write your review.');
+        return;
+      }
+      const stars = '★'.repeat(selectedRating) + '☆'.repeat(5 - selectedRating);
+      const card = document.createElement('div');
+      card.className = 'comment-card';
+      card.innerHTML = `
+        <div class="comment-head">
+          <div class="avatar" style="background:#ECF6FF;color:#0086FF;">Me</div>
+          <div>
+            <p class="comment-name">You</p>
+            <p class="comment-stars">${stars}</p>
+          </div>
+        </div>
+        <p class="comment-text">${text}</p>`;
+      document.getElementById('comments-list').appendChild(card);
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      input.value = '';
+      selectedRating = 0;
+      document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+    }
+  </script>
+
+</body>
+</html>
