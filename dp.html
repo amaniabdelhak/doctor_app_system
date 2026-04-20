@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Doctor Dashboard – MedBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box; scroll-behavior: smooth;}
+:root{
+  --blue:#0086FF;
+  --blue-mid:#0099FF;
+  --blue-light:#E0F2FF;
+  --blue-pale:#F0F8FF;
+  --navy:#003A6B;
+  --navy-soft:#00508A;
+  --text:#1C2B3A;
+  --muted:#7A93AD;
+  --border:#B8DCFF;
+  --white:#fff;
+  --green:#16A36A;
+  --green-bg:#E6F7F1;
+  --red:#D94040;
+  --red-bg:#FDECEC;
+  --yellow:#D4860A;
+  --yellow-bg:#FEF6E6;
+}
+body{
+ font-family: 'Poppins', sans-serif;
+background:var(--blue-pale);min-height:100vh; color: var(--text);}
+
+/* ══ NAV ══ */
+nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 56px;height:68px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,134,255,.08)}
+.logo{font-size:21px;font-weight:800;color:var(--blue)}.logo span{color:var(--navy)}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--navy-soft);background:none;border:none;cursor:pointer;font-family:inherit;padding:8px 16px;border-radius:10px;transition:background .15s}
+.back-btn:hover{background:var(--blue-light);color:var(--blue)}
+
+/* ══ DOCTOR HERO ══ */
+.profile-header{
+  background: linear-gradient(135deg, #CFE8FF 0%, #E6F3FF 100%);
+  padding:60px 56px; display:flex; align-items:center; justify-content: space-between;
+  border-radius:0 0 32px 32px; margin:0 24px;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0, 58, 107, 0.08);
+  position:relative; overflow:hidden;
+}
+.ph-left{display:flex;align-items:center;gap:28px;position:relative;z-index:1}
+.doc-avatar{width:110px;height:110px;border-radius:28px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 8px 24px rgba(0,134,255,0.25); overflow: hidden;}
+.doc-avatar img { width: 100%; height: 100%; object-fit: cover; display: none; }
+.ph-info h1{font-size:32px;font-weight:800;color:var(--navy);line-height:1.2}
+.ph-info p{font-size:15px;color:var(--navy-soft);margin-top:6px; font-weight: 500;}
+
+/* ══ MINI RATE BUTTON ══ */
+.mini-rate-btn {
+    background: var(--white); border: 1.5px solid var(--border); color: var(--blue);
+    padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;
+    z-index: 10;
+}
+.mini-rate-btn:hover { background: var(--blue); color: #fff; }
+
+/* ══ ACTION CARDS ══ */
+.main-content{max-width:1200px; margin: -40px auto 80px; padding: 0 36px;}
+.action-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px; margin-bottom: 32px;}
+.action-card{border:none;border-radius:20px;padding:28px 26px;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.08); text-decoration: none;}
+.action-card:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(0,0,0,0.12)}
+.action-card.card-blue{background:linear-gradient(135deg,#0086FF 0%,#00B4FF 100%)}
+.action-card.card-teal{background:linear-gradient(135deg,#16A36A 0%,#20C997 100%)}
+.action-card.card-indigo{background:linear-gradient(135deg,#5c7cfa 0%,#748ffc 100%)}
+.ac-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.2);backdrop-filter:blur(4px);position:relative;z-index:1}
+.ac-title{font-size:16px;font-weight:700;color:#fff;position:relative;z-index:1}
+.ac-sub{font-size:12px;color:rgba(255,255,255,0.85);position:relative;z-index:1}
+
+/* ══ DASHBOARD GRID ══ */
+.dashboard-grid{display:grid; grid-template-columns: 1fr 340px; gap: 24px;}
+.pcard{background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:28px;box-shadow:0 2px 10px rgba(0,134,255,.05); margin-bottom: 24px;}
+.pcard-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:20px;display:flex;align-items:center;gap:9px}
+
+/* ══ TABLES ══ */
+.appt-table{width:100%;border-collapse:collapse}
+.appt-table th{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;padding:0 14px 14px;text-align:left;border-bottom:1.5px solid var(--border)}
+.appt-table td{padding:16px 14px;font-size:13px;color:var(--text);font-weight:600;border-bottom:1px solid var(--blue-pale)}
+
+/* ══ STATUS BUTTON ══ */
+.btn-status { padding: 6px 14px; border-radius: 8px; border: 1.5px solid transparent; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s; font-family: inherit; }
+.btn-waiting { background: var(--yellow-bg); color: var(--yellow); border-color: #f5d48a; }
+.btn-done    { background: var(--green-bg);  color: var(--green);  border-color: #a8e6ce; cursor: default !important; }
+.btn-accept  { background: var(--green-bg);  color: var(--green);  border-color: #a8e6ce; }
+.btn-reject  { background: var(--red-bg);    color: var(--red);    border-color: #f5aaaa; }
+.btn-accept:hover { background: var(--green); color: #fff; }
+.btn-reject:hover { background: var(--red);   color: #fff; }
+
+/* ══ STAR RATING ══ */
+.stars-container { display: flex; gap: 8px; justify-content: center; margin: 20px 0; }
+.star { font-size: 35px; color: #ddd; cursor: pointer; transition: 0.2s; }
+.star.active { color: #FFD700; }
+
+/* ══ BOOK APPOINTMENT BUTTON ══ */
+.book-section {
+  max-width: 1200px; margin: 0 auto 60px; padding: 0 36px; text-align: center;
+}
+.book-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #0086FF 0%, #00B4FF 100%);
+  color: #fff; font-size: 16px; font-weight: 700; font-family: inherit;
+  padding: 18px 48px; border-radius: 16px; border: none; cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,134,255,0.30); transition: all 0.25s;
+  text-decoration: none;
+}
+.book-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,134,255,0.40); }
+
+/* ══ MODALS ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,20,50,.5);z-index:500;display:none;align-items:center;justify-content:center;padding:40px 20px;backdrop-filter:blur(6px)}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--white);border-radius:24px;width:100%;max-width:820px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.22);animation:slideUp 0.25s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.modal-header{padding:28px 32px; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border);}
+.modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px 8px;border-radius:8px;transition:0.2s;}
+.modal-close:hover{background:var(--red-bg);color:var(--red);}
+
+/* ══ LOGIN MODAL ══ */
+.login-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(35, 74, 107, 0.45);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+.login-modal-overlay.active { display: flex; }
+
+.login-modal-box {
+  background: #F2F9FF;
+  padding: 50px 40px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  position: relative;
+  animation: popIn 0.25s ease;
+}
+@keyframes popIn {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+.login-modal-box .modal-close-btn {
+  position: absolute;
+  top: 16px; right: 20px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #999;
+  background: none;
+  border: none;
+}
+.login-modal-box .modal-close-btn:hover { color: #234A6B; }
+.login-modal-box h2 { font-size: 24px; font-weight: 600; color: #234A6B; text-align: center; margin-bottom: 6px; }
+.login-modal-box .sub { font-size: 13px; color: #234A6B; margin-bottom: 18px; text-align: center; }
+.login-modal-box input, .login-modal-box select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #E0E0E0;
+  border-radius: 10px;
+  background: #fff;
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+.login-modal-box input:focus, .login-modal-box select:focus { border-color: #0086FF; }
+.login-modal-box select { color: #999; appearance: none; }
+.login-modal-box select.filled { color: #1E1E1E; }
+.login-modal-box .name-row { display: flex; gap: 10px; }
+.login-modal-box .name-row input { flex: 1; }
+.login-modal-box .submit-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #0086FF;
+  color: #fff;
+  font-size: 15px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-bottom: 12px;
+}
+.login-modal-box .submit-btn:hover { background: #234A6B; }
+.login-modal-box .switch-text { font-size: 13px; text-align: center; color: #1E1E1E; }
+.login-modal-box .switch-text a { color: #0086FF; font-weight: 500; cursor: pointer; }
+.login-modal-box .switch-text a:hover { text-decoration: underline; }
+
+/* ══ EMPTY STATE ══ */
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;}
+.empty-state span{font-size:32px;display:block;margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Mha<span>Book</span></div>
+  <button class="back-btn" id="logoutBtn" onclick="handleLogout()" style="display:none;">Logout</button>
+</nav>
+
+<div class="profile-header">
+  <div class="ph-left">
+    <div class="doc-avatar" id="avatarBox">
+      <span id="initials">DR</span>
+      <img id="docImg" src="" alt="Doctor">
+    </div>
+    <div class="ph-info">
+      <h1 id="docFullName">Loading...</h1>
+      <p id="docCredentials">Loading Specialty...</p>
+    </div>
+  </div>
+  <button class="mini-rate-btn" onclick="openModal('rateModal')">★ Rate Doctor</button>
+</div>
+
+<div class="main-content">
+  <div class="action-cards">
+
+    <div class="action-card card-blue" onclick="openModal('todayModal')">
+      <div class="ac-icon">📅</div>
+      <div>
+        <div class="ac-title">Today's Appts</div>
+        <div class="ac-sub">Active Sessions</div>
+      </div>
+    </div>
+
+    <div class="action-card card-teal" onclick="openModal('reqModal')">
+      <div class="ac-icon">📩</div>
+      <div>
+        <div class="ac-title">New Requests</div>
+        <div class="ac-sub">Pending Approval</div>
+      </div>
+    </div>
+
+    <a href="#aboutSection" class="action-card card-indigo">
+      <div class="ac-icon">👨‍⚕️</div>
+      <div>
+        <div class="ac-title">About Doctor</div>
+        <div class="ac-sub">View Full Profile</div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="left-col">
+      <div class="pcard" id="aboutSection">
+        <div class="pcard-title">👨‍⚕️ Professional Profile</div>
+        <p id="docAbout" style="font-size:14px;line-height:1.8;color:var(--navy-soft);">
+          Loading information from database...
+        </p>
+      </div>
+
+      <div class="pcard">
+        <div class="pcard-title"> Certifications</div>
+        <div id="docCerts" style="font-size:13px;font-weight:600;color:var(--navy);">
+          Loading...
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="pcard" style="text-align:center;">
+        <div class="pcard-title" style="justify-content:center;">Stats</div>
+        <b id="docExp" style="font-size:24px;color:var(--blue);">0</b>
+        <span style="font-size:11px;display:block;color:var(--muted);font-weight:700;">YEARS EXPERIENCE</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="book-section">
+  <a href="#" class="book-btn" onclick="handleBooking(event)">
+    📆 Book an Appointment
+  </a>
+</div>
+
+
+<!-- ══ TODAY'S APPOINTMENTS MODAL ══ -->
+<div class="modal-overlay" id="todayModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>📅 Today's Appointments</h3>
+      <button class="modal-close" onclick="closeModal('todayModal')">✕</button>
+    </div>
+    <div style="padding:32px;">
+      <table class="appt-table" id="todayTable">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="todayBody">
+          <tr>
+            <td colspan="3">
+              <div class="empty-state">
+                <span>📭</span>
+                No appointments for today yet
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ NEW REQUESTS MODAL ══ -->
+<div class="modal-overlay" id="reqModal">
+  <div class="modal-box" style="max-width:560px;">
+    <div class="modal-header">
+      <h3>📩 New Appointment Requests</h3>
+      <button class="modal-close" onclick="closeModal('reqModal')">✕</button>
+    </div>
+    <div style="padding:32px;">
+      <div id="reqBody">
+        <div class="empty-state">
+          <span>📭</span>
+          No pending requests
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ RATE MODAL ══ -->
+<div class="modal-overlay" id="rateModal">
+  <div class="modal-box" style="max-width:480px;padding:32px;text-align:center;">
+    <h3 style="color:var(--navy);margin-bottom:5px;">Rate your Experience</h3>
+    <p style="font-size:13px;color:var(--muted);">How was your visit with the doctor?</p>
+
+    <div class="stars-container" id="starRating">
+      <span class="star" data-value="1">☆</span>
+      <span class="star" data-value="2">☆</span>
+      <span class="star" data-value="3">☆</span>
+      <span class="star" data-value="4">☆</span>
+      <span class="star" data-value="5">☆</span>
+    </div>
+
+    <textarea style="width:100%;height:100px;border-radius:12px;border:1.5px solid var(--border);padding:12px;font-family:inherit;margin-bottom:20px;outline:none;" placeholder="Write your feedback..."></textarea>
+
+    <button class="btn-status btn-accept" style="width:100%;padding:14px;font-size:14px;" onclick="closeModal('rateModal')">
+      Submit Review
+    </button>
+  </div>
+</div>
+
+
+<!-- ══ LOGIN MODAL ══ -->
+<div class="login-modal-overlay" id="loginModalOverlay" onclick="closeLoginOnOverlay(event)">
+  <div class="login-modal-box">
+    <button class="modal-close-btn" onclick="closeLoginModal()">✕</button>
+
+    <div id="lm-loginForm">
+      <h2>Welcome back!</h2>
+      <p class="sub">Login to your account</p>
+      <input type="email" id="lm-email" placeholder="Email">
+      <input type="password" id="lm-password" placeholder="Password">
+      <button class="submit-btn" onclick="handleLoginSubmit()">Login</button>
+      <p class="switch-text">New here? <a onclick="lmSwitch('signup')">Create an account</a></p>
+    </div>
+
+    <div id="lm-signupForm" style="display:none;">
+      <h2>Start your journey!</h2>
+      <p class="sub">Create your account</p>
+      <div class="name-row">
+        <input type="text" id="lm-fname" placeholder="First Name">
+        <input type="text" id="lm-lname" placeholder="Last Name">
+      </div>
+      <input type="email" id="lm-semail" placeholder="Email">
+      <input type="tel" id="lm-phone" placeholder="Phone Number">
+      <select id="lm-role" onchange="this.classList.add('filled')">
+        <option value="" disabled selected>Select Role</option>
+        <option>Patient</option>
+        <option>Doctor</option>
+      </select>
+      <input type="password" id="lm-spassword" placeholder="Password">
+      <input type="password" id="lm-confirm" placeholder="Confirm Password">
+      <button class="submit-btn" onclick="handleSignupSubmit()">Sign Up</button>
+      <p class="switch-text">Already have an account? <a onclick="lmSwitch('login')">Login</a></p>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ══ STAR RATING ══
+document.querySelectorAll('.star').forEach(star => {
+  star.onclick = () => {
+    const val = star.getAttribute('data-value');
+    document.querySelectorAll('.star').forEach(s => {
+      s.innerHTML = s.getAttribute('data-value') <= val ? '★' : '☆';
+      s.classList.toggle('active', s.getAttribute('data-value') <= val);
+    });
+  };
+});
+
+// ══ MARK APPOINTMENT AS DONE ══
+function markDone(btn, rowId) {
+  btn.textContent = 'Completed';
+  btn.className   = 'btn-status btn-done';
+  btn.onclick     = null;
+  document.getElementById(rowId).style.opacity = '0.5';
+}
+
+// ══ RENDER TODAY ROW ══
+function renderTodayRow(id, patientName, time) {
+  const tbody = document.getElementById('todayBody');
+  if (tbody.querySelector('.empty-state')) tbody.innerHTML = '';
+  const rowId = 'row-' + id;
+  tbody.innerHTML += `
+    <tr id="${rowId}">
+      <td>${patientName}</td>
+      <td>${time}</td>
+      <td>
+        <button class="btn-status btn-waiting" onclick="markDone(this, '${rowId}')">
+          Waiting
+        </button>
+      </td>
+    </tr>`;
+}
+
+// ══ RENDER REQUEST ROW ══
+function renderRequestRow(id, patientName, date, time) {
+  const container = document.getElementById('reqBody');
+  if (container.querySelector('.empty-state')) container.innerHTML = '';
+  container.innerHTML += `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--blue-pale);">
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--navy)">${patientName}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px">${date} &nbsp;·&nbsp; ${time}</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-status btn-accept" onclick="handleRequest('${id}', 'accepted', this)">Accept</button>
+        <button class="btn-status btn-reject" onclick="handleRequest('${id}', 'rejected', this)">Reject</button>
+      </div>
+    </div>`;
+}
+
+// ══ HANDLE REQUEST ══
+function handleRequest(id, action, btn) {
+  const row = btn.closest('div[style]');
+  if (action === 'accepted') {
+    row.style.opacity = '0.5';
+    row.style.pointerEvents = 'none';
+    btn.textContent = '✓ Accepted';
+    btn.style.background = 'var(--green)';
+    btn.style.color = '#fff';
+  } else {
+    row.remove();
+  }
+}
+
+// ══ LOAD DOCTOR DATA ══
+function getDocData() {
+  const params = new URLSearchParams(window.location.search);
+
+  // ✅ الإصلاح: URL param يتقدم دائماً على localStorage
+  // لو URL فيه role=doctor → doctor، حتى لو localStorage فيه patient
+  const urlRole    = params.get('role');
+  const storedRole = localStorage.getItem('mhabook_role');
+  const role = urlRole || storedRole || 'patient';
+
+  // لو URL حدد رول، نحدّث localStorage بيه
+  if (urlRole) {
+    localStorage.setItem('mhabook_role', urlRole);
+  }
+
+  // ══ إخفاء/إظهار حسب الـ role ══
+  if (role === 'doctor') {
+    document.querySelector('.action-cards').children[0].style.display = 'flex';
+    document.querySelector('.action-cards').children[1].style.display = 'flex';
+    document.querySelector('.action-cards').children[2].style.display = 'flex';
+    document.querySelector('.book-section').style.display  = 'none';
+    document.querySelector('.mini-rate-btn').style.display = 'none';
+    document.getElementById('logoutBtn').style.display     = 'flex';
+  } else {
+    document.querySelector('.action-cards').children[0].style.display = 'none';
+    document.querySelector('.action-cards').children[1].style.display = 'none';
+    document.querySelector('.book-section').style.display  = 'block';
+    document.querySelector('.mini-rate-btn').style.display = 'flex';
+    document.getElementById('logoutBtn').style.display     = 'none';
+  }
+
+  const firstName = params.get('fname')     || 'Ahmed';
+  const lastName  = params.get('lname')     || 'Mansour';
+  const specialty = params.get('specialty') || 'Cardiologist Specialist';
+  const about     = params.get('about')     || 'Consultant Cardiologist with over 12 years of experience in heart diagnostics.';
+  const photo     = params.get('photo');
+  const certs     = params.get('certs')     || 'Medical Degree • American Board';
+  const exp       = params.get('exp')       || '12';
+
+  document.getElementById('docFullName').textContent    = `Dr. ${firstName} ${lastName}`;
+  document.getElementById('docCredentials').textContent = specialty;
+  document.getElementById('docAbout').textContent       = about;
+  document.getElementById('docExp').textContent         = exp + '+';
+  document.getElementById('docCerts').textContent       = certs;
+
+  if (photo) {
+    document.getElementById('docImg').src             = photo;
+    document.getElementById('docImg').style.display  = 'block';
+    document.getElementById('initials').style.display = 'none';
+  } else {
+    document.getElementById('initials').textContent = firstName[0] + lastName[0];
+  }
+}
+
+// ══ MODAL HELPERS ══
+function openModal(id)  { document.getElementById(id).classList.add('open');    }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ══ BOOKING ══
+function handleBooking(e) {
+  e.preventDefault();
+  const isLoggedIn = localStorage.getItem('mhabook_logged_in');
+  if (isLoggedIn) {
+    window.location.href = 'booking.html';
+  } else {
+    document.getElementById('loginModalOverlay').classList.add('active');
+    lmSwitch('login');
+  }
+}
+
+// ══ LOGOUT ══
+function handleLogout() {
+  localStorage.removeItem('mhabook_logged_in');
+  localStorage.removeItem('mhabook_role');
+  window.location.href = 'home(1).html';
+}
+
+// ══ LOGIN MODAL HELPERS ══
+function closeLoginModal() {
+  document.getElementById('loginModalOverlay').classList.remove('active');
+}
+function closeLoginOnOverlay(e) {
+  if (e.target === document.getElementById('loginModalOverlay')) closeLoginModal();
+}
+function lmSwitch(tab) {
+  document.getElementById('lm-loginForm').style.display  = tab === 'login'  ? 'block' : 'none';
+  document.getElementById('lm-signupForm').style.display = tab === 'signup' ? 'block' : 'none';
+}
+
+// ══ LOGIN SUBMIT ══
+function handleLoginSubmit() {
+  const email    = document.getElementById('lm-email').value.trim();
+  const password = document.getElementById('lm-password').value;
+
+  if (!email || !password) {
+    alert('Please fill in all fields.');
+    return;
+  }
+
+  localStorage.setItem('mhabook_logged_in', 'true');
+  localStorage.setItem('mhabook_role', 'patient');
+  closeLoginModal();
+  window.location.href = 'booking.html';
+}
+
+// ══ SIGNUP SUBMIT ══
+function handleSignupSubmit() {
+  const fname    = document.getElementById('lm-fname').value.trim();
+  const lname    = document.getElementById('lm-lname').value.trim();
+  const email    = document.getElementById('lm-semail').value.trim();
+  const phone    = document.getElementById('lm-phone').value.trim();
+  const role     = document.getElementById('lm-role').value;
+  const password = document.getElementById('lm-spassword').value;
+  const confirm  = document.getElementById('lm-confirm').value;
+
+  if (!fname || !lname || !email || !phone || !role || !password || !confirm) {
+    alert('Please fill in all fields.');
+    return;
+  }
+  if (password !== confirm) {
+    alert('Passwords do not match.');
+    return;
+  }
+
+  localStorage.setItem('mhabook_logged_in', 'true');
+  localStorage.setItem('mhabook_role', role.toLowerCase());
+  closeLoginModal();
+
+  if (role === 'Patient') {
+    window.location.href = 'booking.html';
+  } else {
+    window.location.href = 'doctor_profile.html';
+  }
+}
+
+window.onload = getDocData;
+</script>
+
+</body>
+</html>
