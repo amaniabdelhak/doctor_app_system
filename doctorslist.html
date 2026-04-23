@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MhaBook – Doctors</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-light: #0086FF;
+      --blue-dark: #234A6B;
+      --blue-mid: #0179e2;
+      --bg: #eaf4ff;
+      --card-bg: #ffffff;
+      --sidebar-bg: #ffffff;
+      --text-main: #234A6B;
+      --text-muted: #7a8aab;
+      --accent-tag-neuro: #e8f0ff;
+      --accent-tag-cardio: #ffe8f0;
+      --accent-tag-dermo: #e8fff4;
+      --accent-tag-gyne: #fff8e8;
+      --accent-tag-ortho: #f0e8ff;
+      --shadow: 0 4px 24px rgba(30,80,180,0.09);
+      --shadow-hover: 0 12px 40px rgba(30,80,180,0.18);
+      --radius: 18px;
+      --sidebar-w: 230px;
+      --mini-bar-w: 64px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--sidebar-bg);
+      position: fixed;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 28px 18px 0px;
+      box-shadow: 4px 0 24px rgba(30,80,180,0.07);
+      z-index: 90;
+    }
+    .brand {
+      font-family: 'Nunito', sans-serif;
+      font-size: 26px;
+      font-weight:900;
+      letter-spacing: -0.5px;
+      margin-bottom: 32px;
+      padding-left: 4px;
+    }
+    .brand span.mha { color: var(--blue-light); }
+    .brand span.book { color: var(--blue-dark); }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      padding: 0 8px;
+      margin-bottom: 8px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.18s, color 0.18s;
+      margin-bottom: 2px;
+    }
+    .nav-item:hover { background: #eaf4ff; color: var(--blue-mid); }
+    .nav-item.active {
+      background: linear-gradient(90deg, #0086FF 0%, #0179e2 100%);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(59,158,255,0.30);
+    }
+    .nav-item .nav-icon {
+      width: 32px; height: 32px;
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(59,158,255,0.10);
+      flex-shrink: 0;
+    }
+    .nav-item.active .nav-icon { background: rgba(255,255,255,0.22); }
+    .nav-icon svg { width: 16px; height: 16px; }
+    .nav-item svg path, .nav-item svg rect, .nav-item svg circle { fill: currentColor; }
+
+    .sidebar-spacer { flex: 1; }
+
+    /* ── Main content ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 32px 36px 40px;
+      min-height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .topbar h1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 28px; font-weight: 900;
+      color: var(--text-main);
+    }
+    .search-wrap {
+      display: flex; align-items: center;
+      background: #fff;
+      border-radius: 12px;
+      padding: 9px 16px;
+      gap: 10px;
+      box-shadow: var(--shadow);
+      width: 240px;
+    }
+    .search-wrap input {
+      border: none; outline: none;
+      font-size: 13px; color: var(--text-main);
+      background: transparent; width: 100%;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .search-wrap svg { width: 16px; height: 16px; color: var(--text-muted); flex-shrink: 0; }
+
+    /* ── Filter tabs ── */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .tab {
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      background: #fff;
+      color: var(--text-muted);
+      box-shadow: 0 2px 10px rgba(30,80,180,0.07);
+      transition: all 0.18s;
+      letter-spacing: 0.3px;
+    }
+    .tab:hover { background: #eaf4ff; color: var(--blue-mid); }
+    .tab.active {
+      background: linear-gradient(90deg, #0086FF, #0179e2);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(59,158,255,0.30);
+    }
+
+    /* Active filter banner */
+    .active-filter-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: #e0efff;
+      border: 1.5px solid #b0d4ff;
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0060cc;
+    }
+    .active-filter-banner.show { display: flex; }
+    .clear-filter-btn {
+      margin-left: auto;
+      background: #0086FF;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.16s;
+    }
+    .clear-filter-btn:hover { background: #0060cc; }
+
+    /* ── Grid ── */
+    .doctors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 22px;
+    }
+
+    /* ── Doctor card ── */
+    .doctor-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px 20px 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.22s, box-shadow 0.22s;
+      position: relative;
+      overflow: hidden;
+    }
+    .doctor-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0086FF, #0179e2);
+      opacity: 0;
+      transition: opacity 0.22s;
+    }
+    .doctor-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+    .doctor-card:hover::before { opacity: 1; }
+
+    .rating-badge {
+      position: absolute;
+      top: 14px; left: 14px;
+      background: #fff7e0;
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: 11px; font-weight: 800;
+      color: #f0a500;
+      display: flex; align-items: center; gap: 3px;
+    }
+    .rating-badge svg { width: 11px; height: 11px; fill: #f0a500; }
+
+    .avatar-wrap {
+      width: 82px; height: 82px;
+      border-radius: 50%;
+      border: 3px solid #e4efff;
+      overflow: hidden;
+      background: #ddeeff;
+      flex-shrink: 0;
+    }
+    .avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Nunito', sans-serif;
+      font-size: 26px; font-weight: 900;
+      color: var(--blue-mid);
+      background: linear-gradient(135deg, #ddeeff, #c7e0ff);
+    }
+
+    .doctor-name {
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px; font-weight: 800;
+      color: var(--text-main);
+      text-align: center;
+      line-height: 1.25;
+    }
+    .doctor-address {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .specialty-badge {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+    .spec-neurologist   { background: var(--accent-tag-neuro);  color: #2255cc; }
+    .spec-cardiologist  { background: var(--accent-tag-cardio); color: #cc2266; }
+    .spec-dermatologist { background: var(--accent-tag-dermo);  color: #1a9966; }
+    .spec-gynecologist  { background: var(--accent-tag-gyne);   color: #cc8800; }
+    .spec-orthopedist   { background: var(--accent-tag-ortho);  color: #7722cc; }
+    .spec-surgeon       { background: #ffe0e0; color: #cc2200; }
+    .spec-oncologist    { background: #fde8ff; color: #9922cc; }
+
+    .view-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(90deg, #0086FF 0%, #0179e2 100%);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      margin-top: 4px;
+      transition: opacity 0.18s, transform 0.18s;
+      box-shadow: 0 4px 14px rgba(59,158,255,0.28);
+    }
+    .view-btn:hover { opacity: 0.88; transform: scale(1.02); }
+
+    /* No results */
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .no-results .no-results-icon { font-size: 48px; margin-bottom: 14px; }
+    .no-results h3 { font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 6px; }
+    .no-results p  { font-size: 13px; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #c0d8f8; border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand"><span class="mha">Mha</span><span class="book">book</span></div>
+
+    <div class="nav-section-label">Menu</div>
+
+    <a href="home.html" class="nav-item">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      </span>
+      Home
+    </a>
+
+    <a href="patientProfile.html" class="nav-item">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      </span>
+      My Profile
+    </a>
+
+    <a href="doctorslist.html" class="nav-item active">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.34C18 2.54 15.86.6 13.31.6c-1.4 0-2.69.6-3.6 1.56L9 2.87l-.7-.7C7.39 1.2 6.1.6 4.7.6 2.14.6 0 2.54 0 4.66c0 .46.11.9.18 1.34H0v14a2 2 0 002 2h16a2 2 0 002-2V6zm-7.69 12.5L9 15.19 5.69 18.5 4.5 17.31 7.81 14 4.5 10.69 5.69 9.5 9 12.81l3.31-3.31 1.19 1.19L10.19 14l3.31 3.31-1.19 1.19z"/></svg>
+      </span>
+      Doctors List
+    </a>
+
+    <div class="sidebar-spacer"></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <h1>Doctors</h1>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search Doctor" id="searchInput" oninput="filterDoctors()"/>
+      </div>
+    </div>
+
+    
+    <div class="active-filter-banner" id="filterBanner">
+      <span id="filterBannerText"></span>
+      <button class="clear-filter-btn" onclick="clearFilters()">✕ Clear Filter</button>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="tab active" id="tab-all"          onclick="filterBySpec('all', this)">All</button>
+      <button class="tab" id="tab-cardiologist"        onclick="filterBySpec('cardiologist', this)">Cardiology</button>
+      <button class="tab" id="tab-orthopedist"         onclick="filterBySpec('orthopedist', this)">Orthopedics</button>
+      <button class="tab" id="tab-oncologist"          onclick="filterBySpec('oncologist', this)">Oncology</button>
+      <button class="tab" id="tab-dermatologist"       onclick="filterBySpec('dermatologist', this)">Dermatology</button>
+      <button class="tab" id="tab-surgeon"             onclick="filterBySpec('surgeon', this)">Surgery</button>
+      <button class="tab" id="tab-gynecologist"        onclick="filterBySpec('gynecologist', this)">Gynecology</button>
+      <button class="tab" id="tab-neurologist"         onclick="filterBySpec('neurologist', this)">Neurology</button>
+    </div>
+
+    <div class="doctors-grid" id="doctorsGrid"></div>
+  </main>
+
+  <script>
+    const doctors = [
+      { name: "Dr. Topon Kumar",    address: "1289 Natalie Brook Apt. 966", specialty: "neurologist",   rating: 4.5, initials: "TK" },
+      { name: "Dr. Albert Miles",   address: "1289 Natalie Brook Apt. 966", specialty: "cardiologist",  rating: 5.0, initials: "AM" },
+      { name: "Gabriel Holt",       address: "1289 Natalie Brook Apt. 966", specialty: "neurologist",   rating: 4.2, initials: "GH" },
+      { name: "Earl Hopkins",       address: "1289 Natalie Brook Apt. 966", specialty: "dermatologist", rating: 4.5, initials: "EH" },
+      { name: "Owen Larson",        address: "1289 Natalie Brook Apt. 966", specialty: "dermatologist", rating: 4.5, initials: "OL" },
+      { name: "Teresa Schwartz",    address: "1289 Natalie Brook Apt. 966", specialty: "gynecologist",  rating: 4.3, initials: "TS" },
+      { name: "Mary Garcia",        address: "1289 Natalie Brook Apt. 966", specialty: "neurologist",   rating: 4.5, initials: "MG" },
+      { name: "Sue Gill",           address: "1289 Natalie Brook Apt. 966", specialty: "cardiologist",  rating: 4.0, initials: "SG" },
+      { name: "Lora Payne",         address: "1289 Natalie Brook Apt. 966", specialty: "orthopedist",   rating: 5.0, initials: "LP" },
+      { name: "Adrian Gomez",       address: "1289 Natalie Brook Apt. 966", specialty: "surgeon",       rating: 4.2, initials: "AG" },
+      { name: "Stephen Shaw",       address: "1289 Natalie Brook Apt. 966", specialty: "neurologist",   rating: 4.5, initials: "SS" },
+      { name: "Dr. Nora Patel",     address: "1289 Natalie Brook Apt. 966", specialty: "gynecologist",  rating: 4.8, initials: "NP" },
+      { name: "Dr. James Weir",     address: "1289 Natalie Brook Apt. 966", specialty: "cardiologist",  rating: 4.6, initials: "JW" },
+      { name: "Diana Ross",         address: "1289 Natalie Brook Apt. 966", specialty: "dermatologist", rating: 4.4, initials: "DR" },
+      { name: "Marcus Bell",        address: "1289 Natalie Brook Apt. 966", specialty: "orthopedist",   rating: 4.7, initials: "MB" },
+      { name: "Chloe Warren",       address: "1289 Natalie Brook Apt. 966", specialty: "surgeon",       rating: 4.3, initials: "CW" },
+    ];
+
+    const specLabels = {
+      neurologist:   "Neurologist",
+      cardiologist:  "Cardiologist",
+      dermatologist: "Dermatologist",
+      gynecologist:  "Gynecologist",
+      orthopedist:   "Orthopedist",
+      surgeon:       "Surgeon",
+      oncologist:    "Oncologist",
+    };
+
+    let activeSpec = 'all';
+    let searchVal  = '';
+
+    function renderCards(list) {
+      const grid = document.getElementById('doctorsGrid');
+      grid.innerHTML = '';
+
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div class="no-results">
+            <div class="no-results-icon">🔍</div>
+            <h3>No doctors found</h3>
+            <p>Try a different specialty or clear your search.</p>
+          </div>`;
+        return;
+      }
+
+      list.forEach((d, i) => {
+        const specClass = `spec-${d.specialty}`;
+        const card = document.createElement('div');
+        card.className = 'doctor-card';
+        card.style.animationDelay = `${i * 0.05}s`;
+        card.innerHTML = `
+          <div class="rating-badge">
+            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            ${d.rating.toFixed(1)}
+          </div>
+          <div class="avatar-wrap">
+            <div class="avatar-placeholder">${d.initials}</div>
+          </div>
+          <div class="doctor-name">${d.name}</div>
+          <div class="doctor-address">${d.address}</div>
+          <span class="specialty-badge ${specClass}">${specLabels[d.specialty] || d.specialty}</span>
+          <a href="dp.html" class="view-btn">View Details</a>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterBySpec(spec, btn) {
+      activeSpec = spec;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      applyFilters();
+      updateBanner();
+    }
+
+    function filterDoctors() {
+      searchVal = document.getElementById('searchInput').value.toLowerCase();
+      applyFilters();
+      updateBanner();
+    }
+
+    function applyFilters() {
+      const filtered = doctors.filter(d => {
+        const matchSpec   = activeSpec === 'all' || d.specialty === activeSpec;
+        const matchSearch = d.name.toLowerCase().includes(searchVal) || d.specialty.includes(searchVal);
+        return matchSpec && matchSearch;
+      });
+      renderCards(filtered);
+    }
+
+    function updateBanner() {
+      const banner = document.getElementById('filterBanner');
+      const bannerText = document.getElementById('filterBannerText');
+      const parts = [];
+      if (activeSpec !== 'all') parts.push(`Specialty: ${specLabels[activeSpec] || activeSpec}`);
+      if (searchVal)            parts.push(`Search: "${searchVal}"`);
+      if (parts.length > 0) {
+        bannerText.textContent = '🔍 Filtered by — ' + parts.join('  ·  ');
+        banner.classList.add('show');
+      } else {
+        banner.classList.remove('show');
+      }
+    }
+
+    function clearFilters() {
+      activeSpec = 'all';
+      searchVal  = '';
+      document.getElementById('searchInput').value = '';
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('tab-all').classList.add('active');
+      applyFilters();
+      updateBanner();
+      
+      history.replaceState(null, '', window.location.pathname);
+    }
+
+   
+    function initFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const spec   = params.get('specialty');
+      const search = params.get('search');
+
+      if (spec) {
+        activeSpec = spec;
+        const tabEl = document.getElementById(`tab-${spec}`);
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        if (tabEl) tabEl.classList.add('active');
+      }
+      if (search) {
+        searchVal = search.toLowerCase();
+        document.getElementById('searchInput').value = search;
+      }
+
+      applyFilters();
+      updateBanner();
+    }
+
+    initFromURL();
+  </script>
+</body>
+</html>
